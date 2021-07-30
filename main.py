@@ -49,9 +49,6 @@ print("f1 score of best classifier: ",max)
 df_test = pd.read_csv('Dataset/test.csv')
 test_id = df_test.id
 test_tweets = df_test.text
-print(df_test.head())
-print(test_id)
-print(test_tweets)
 
 test_corpus = []
 for i in range(len(test_tweets)):
@@ -65,7 +62,12 @@ for i in range(len(test_tweets)):
 test_X = tfidf.transform(test_corpus).toarray()
 pred_y = best_clf.predict(test_X)
 
+#retraining the model on full training dataset
+final_clf = MultinomialNB()
+final_clf.fit(X,y)
+final_pred = final_clf.predict(test_X)
+
 submission = pd.DataFrame({"id":test_id,
-                           "target":pred_y
+                           "target":final_pred
                            })
 submission.to_csv('submission.csv', index=False)
